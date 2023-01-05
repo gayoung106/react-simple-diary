@@ -2,7 +2,6 @@ import React from "react";
 import DiaryItem from "./DiaryItem";
 
 const DiaryList = ({ diaryList }) => {
-  console.log(diaryList);
   return (
     <div className="DiaryList">
       <h2>일기리스트</h2>

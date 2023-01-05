@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-const DiaryEditor = () => {
+const DiaryEditor = ({ onCreate }) => {
   const [state, setState] = useState({
     author: "",
     content: "",
@@ -30,7 +30,14 @@ const DiaryEditor = () => {
       contentTextarea.current.focus();
       return;
     }
+
+    onCreate(state.author, state.content, state.emotion);
     alert("저장이 완료됐습니다.");
+    setState({
+      author: "",
+      content: "",
+      emotion: 1,
+    });
   };
   return (
     <div className="DiaryEditor">
