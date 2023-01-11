@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const DiaryItem = ({
   onEdit,
@@ -9,6 +9,9 @@ const DiaryItem = ({
   created_date,
   id,
 }) => {
+  useEffect(() => {
+    console.log(`${id}번 째 아이템 렌더!`);
+  });
   const [isEdit, setIsEdit] = useState(false);
   // isEdit이면 수정을 하지 않는 현재상태 = false
   // setIsEdit은 수정을 하는 상태가 아니라 업데이트 되는 상태(즉, 업데이트 되지 않으면 현재상태가 되고, 업데이트 되면 업데이트 되는 내용이 현재상태가 됨)
@@ -17,6 +20,7 @@ const DiaryItem = ({
   // 그러니까 onClick을 할때마다 토글을 하면 이에 따라 변화한 상태(isEdit -> !isEdit / !isEdit->isEdit)가 setIsEdit이 됨
 
   const localContentInput = useRef();
+
   const handleRemove = () => {
     if (window.confirm(`${id} 번째 일기를 삭제 하시겠습니까?`)) {
       onRemove(id);
@@ -26,7 +30,9 @@ const DiaryItem = ({
 
   const handleQuitEdit = () => {
     setIsEdit(false);
+    //수정을 안할꺼면(내용은 입력했는데, 취소누름)
     setLocalContent(content);
+    //그럼 그대로 기존 내용이 들어있어야 함
   };
 
   const handleEdit = () => {
@@ -40,6 +46,7 @@ const DiaryItem = ({
     }
   };
   const [localContent, setLocalContent] = useState(content);
+
   return (
     <div className="DiaryItem">
       <div className="info">
@@ -77,4 +84,4 @@ const DiaryItem = ({
   );
 };
 
-export default DiaryItem;
+export default React.memo(DiaryItem);
