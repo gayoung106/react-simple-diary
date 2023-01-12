@@ -1,17 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { DiaryDispatchContext } from "./App";
 
-const DiaryItem = ({
-  onEdit,
-  onRemove,
-  author,
-  content,
-  emotion,
-  created_date,
-  id,
-}) => {
-  useEffect(() => {
-    console.log(`${id}번 째 아이템 렌더!`);
-  });
+const DiaryItem = ({ author, content, emotion, created_date, id }) => {
+  const { onRemove, onEdit } = useContext(DiaryDispatchContext);
   const [isEdit, setIsEdit] = useState(false);
   // isEdit이면 수정을 하지 않는 현재상태 = false
   // setIsEdit은 수정을 하는 상태가 아니라 업데이트 되는 상태(즉, 업데이트 되지 않으면 현재상태가 되고, 업데이트 되면 업데이트 되는 내용이 현재상태가 됨)

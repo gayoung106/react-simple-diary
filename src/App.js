@@ -43,6 +43,13 @@ const reducer = (state, action) => {
  * 첫번째는 상태변화하기 직전의 상태인 state,
  * 두번째는 어떤 상태변화를 일으켜야 하는지 정보가 담겨져 있는 action객체
  * 그리고, 그 안에 리턴하는 값이 새로운 상태변화의 값이 됨*/
+
+/** context */
+export const DiaryStateContext = React.createContext();
+//export: 내보내줘야 다른 컴포넌트에서 사용이 가능(공급자가 공급하는 데이터를 받아 올 수 있음)
+
+export const DiaryDispatchContext = React.createContext();
+
 function App() {
   /** useReducer를 사용하기 위해, useState부분을 주석 */
   //const [data, setData] = useState([]);
@@ -127,6 +134,10 @@ function App() {
     //일치하지 않는다면, it(원래 객체에 저장된 데이터)를 반환
   }, []);
 
+  const memoizedDispatches = useMemo(() => {
+    return { onCreate, onRemove, onEdit };
+  }, []);
+
   const goodDiaryAnalysis = useMemo(() => {
     const goodCount = data.filter((it) => it.emotion >= 3).length;
     const badCount = data.length - goodCount;
@@ -139,14 +150,20 @@ function App() {
   const { goodCount, badCount, goodRatio } = goodDiaryAnalysis;
   //goodDiaryAnalysis는 useMemo를 호출한 것 이므로 함수가 아님 따라서 "()"를 붙이지 않고 호출
   return (
-    <div className="App">
-      <DiaryEditor onCreate={onCreate} />
-      <div>전체일기: {data.length}</div>
-      <div>기분좋은 일기 개수: {goodCount}</div>
-      <div>기분나쁜 일기 개수: {badCount}</div>
-      <div>기분좋은 일기 비율: {goodRatio}</div>
-      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
-    </div>
+    <DiaryStateContext.Provider value={data}>
+      {/* value로 내려주는 값은 언제든지 사용가능한 값이다 
+      따라서 prop으로 data값을 전달 받을 필요가 없음, 왜냐하면 context로 받을꺼니까!!*/}
+      <DiaryDispatchContext.Provider value={memoizedDispatches}>
+        <div className="App">
+          <DiaryEditor />
+          <div>전체일기: {data.length}</div>
+          <div>기분좋은 일기 개수: {goodCount}</div>
+          <div>기분나쁜 일기 개수: {badCount}</div>
+          <div>기분좋은 일기 비율: {goodRatio}</div>
+          <DiaryList />
+        </div>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 }
 
